@@ -1,0 +1,9 @@
+git@github.com:wendell-nasc/node-cero-a-experto.git
+
+
+Instalar o nodemon 
+npm install -g nodemon --> forma global
+npm install -i nodemon --> forma local
+
+
+
