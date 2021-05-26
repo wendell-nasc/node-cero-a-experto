@@ -36,20 +36,27 @@ git commit . -m "aula3"
 git commit . -m "aula4"
 
 
+git remote show--->exibir branches
+
+
 git remote add aula1 git@github.com:wendell-nasc/node-cero-a-experto.git
 git remote add aula2 git@github.com:wendell-nasc/node-cero-a-experto.git
-git remote add aula3 git@github.com:wendell-nasc/node-cero-a-experto.git
-git remote add aula4 git@github.com:wendell-nasc/node-cero-a-experto.git
+git remote add aula-03 git@github.com:wendell-nasc/node-cero-a-experto.git
+git remote add aula-04 git@github.com:wendell-nasc/node-cero-a-experto.git
 
-
+-->ENVIAR
 git push -u aula3 aula-03
-git push -u aula4 aula-04
+git push -u aula-04 aula4
 
+-->PUXAR
 
 
 :::::::::::::::Instalar o nodemon 
+
+--> nodemon
 npm install -g nodemon --> forma global
 npm install -i nodemon --> forma local
 
-
-
+-->yargs
+npm i yargs
+	
