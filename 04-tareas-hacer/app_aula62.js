@@ -9,9 +9,9 @@ const { inquirerMenu,
     confirmar,
     mostrarListadoChecklist
     
-    } = require ('./helpers/inqurier_aula61');
+    } = require ('./helpers/inqurier_aula62');
 
-const Tareas = require('./models/tareas_aula61');
+const Tareas = require('./models/tareas_aula62');
 
 const {guardarDB,
     leerDB
@@ -91,7 +91,9 @@ const main = async () => {
             
   
         const ids = await mostrarListadoChecklist( tareas.listadoArr );
-        console.log (ids);
+        ///console.log (ids);
+
+        tareas.toogleCompletadas ( ids );
 
         
     break;
