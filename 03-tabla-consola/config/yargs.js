@@ -1,4 +1,4 @@
-const opts = {
+SFDSFSFSFSFconst opts = {
     base: {
         demand: true,
         alias: 'b'
@@ -6,9 +6,7 @@ const opts = {
     limite: {
         alias: 'l',
         default: 10
-    }
-}
-
+    
 
 const argv = require('yargs')
     .command('listar', 'Imprime en consola la tabla de multiplicar', opts)
