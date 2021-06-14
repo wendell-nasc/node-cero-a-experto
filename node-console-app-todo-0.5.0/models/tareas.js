@@ -7,9 +7,7 @@ const Tarea = require('./tarea');
 
 class Tareas {
 
-    _listado = {
-        'abc': 123
-    };
+
 
 
     get listadoArr() {
