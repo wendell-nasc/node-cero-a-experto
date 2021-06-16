@@ -1,14 +1,43 @@
+const fs = require('fs');
+
 const axios = require('axios');
 
 class Busquedas {
 
-     // _historial  = {};
+//historial  =  ['Santos'];
+    
+//historial = [];
 
-    constructor() {
+
+
+
+//this.historial = ['Santos', 'Guaruja'];
+
+constructor() {
 
         /// TODO: leer DB si existe
+        this.leerDB();
+        
 
     }
+
+        /// Transformar a primeira letra de cada palavra em maiuscula maiuscula
+
+    get historialCapitalizado() {
+        return this.historial.map( lugar => {
+            /// Cortar as palavras pelo espaco ` `
+            let palabras = lugar.split(' ');
+            palabras = palabras.map( p => p[0].toUpperCase() + p.substring(1) );
+
+            return palabras.join(' ')
+
+        })
+    }
+
+
+
+    
+
 
     get paramsMapBox() {
         return { 
@@ -146,7 +175,60 @@ class Busquedas {
        
     }
 
+        agregarHistorial( lugar = '' ) {
 
+        //TODO: PREVENIR DPLICADOS
+
+       ///  this.historial.unshift ( lugar );
+
+        
+       const historial = ['Santos'];
+      
+
+       if ( historial.includes( lugar.toLocaleLowerCase())){
+           return;
+        }
+
+        historial.push ( lugar.toLocaleLowerCase() );
+   
+        // historial.push ( lugar );
+
+
+        // Grabar en DB
+        this.guardarDB();
+            
+        }
+
+
+        guardarDB() {
+
+            const payload = {
+                historial: this.agregarHistorial.historial
+                                // 
+            };
+            
+            console.log( payload );
+
+
+            //fs.writeFileSync( this.agregarHistorial.dbPath, JSON.stringify( payload ) );
+            fs.writeFileSync( './db/database.json', JSON.stringify( payload ) );
+    
+        }
+
+
+        // SON.stringify = Converte java para o formato , JSON.parse = desconverte para java
+    
+        leerDB() {
+    
+            if( !fs.existsSync( this.dbPath ) ) return;
+            
+            const info = fs.readFileSync( this.dbPath, { encoding: 'utf-8' });
+            const data = JSON.parse( info );
+    
+            this.agregarHistorial.historial = data.historial;
+    
+    
+        }
 
 
 }

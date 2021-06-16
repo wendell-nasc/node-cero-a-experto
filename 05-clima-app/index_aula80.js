@@ -6,9 +6,9 @@ require('dotenv').config()
 
 const { 
     leerInput, inquirerMenu, pausa, listarLugares
-} = require ('./helpers/inqurier_aula78');
+} = require ('./helpers/inqurier_aula80');
 
-const Busquedas = require('./models/busquedas_aula78');
+const Busquedas = require('./models/busquedas_aula80');
 
 
 //console.log('Hola Mundo');
@@ -77,12 +77,23 @@ const main = async () => {
                 
                 //// Para capturar o lugar selecionado e imprimir na sequencia
                 const id = await listarLugares( lugares );
+
+                ///Sair do fluxose pressionar zero/// string zero retornada
+
+                if ( id === '0' ) continue;
+
+                
                 console.log( { id });
 
                 
             
                 ///Metodo JAVA find para localizar a cidade pelo id e extrair informações
                 const lugarSelecionado = lugares.find( l => l.id === id );
+
+
+                //// Guardar en DB
+                busquedas.agregarHistorial ( lugarSelecionado.nombre ); 
+                 ////console.log( lugarSelecionado.nombre ); break;
 
 
 
@@ -121,6 +132,15 @@ const main = async () => {
 
 
                 case 2:
+                    
+                busquedas.agregarHistorial.foreach( ( lugar, i ) => {
+                
+                
+                    const idx = `${ i + 1 }.`.green;
+                    console.log( `${ idx } ${ lugar }`  );
+
+
+                });
 
                 break;
 
