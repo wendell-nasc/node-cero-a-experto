@@ -7,7 +7,7 @@ const { response, request } = require ('express');
 const bcryptjs = require('bcryptjs');
 
 ///Importar os modelos para salvar no banco de dados mongooose
-const Usuario = require ('../models/usuario_aula122');
+const Usuario = require ('../models/usuario');
 //const Usuario = require (process.env.appmodels1);
 
 /// Utilizada para fazer validações dos campos atraves do middlware....
@@ -43,17 +43,31 @@ const usuarioGet =  (req, res = response ) => {
     ///Define uma constant para o metodo usuarioGet... res=response é importado do express logo acima
     
   
-    const usuarioPut =  (req, res = response ) => { 
+    const usuarioPut =  async (req, res = response ) => { 
     
         ///Recebe todas informações enviadas nos paramatros
-        const id = req.params;
+        const { id }= req.params;
+        const { _id, password, google, correo, ... resto } = req.body; //Remove as informações da request
+
+        /// TODO validar contra base de datos
+        if ( password ) { ///Encriptogra a senha alterada de novo
+                // Encriptar la contraseña
+                const salt = bcryptjs.genSaltSync(); ///Metodo para definir a dificuldade de encriptrografação
+                resto.password = bcryptjs.hashSync( password, salt);/// Encriptografar em uma unica via
+
+
+        }
+         /// Funcação findByIdAndUpdate busca pelo id e atualiza
+         ///useFindAndModify utiliza essa funcao da base de dados
+        const usuario = await Usuario.findByIdAndUpdate( id, resto );
+
+
         ///Recebe todas informações enviadas nos paramatros desestruturada
-        ///const { id } = req.params;
-        
+        ///const { id } = req.params;      
         
     res.json({ 
         msg: 'put API - controlador',
-        id
+        usuario /// devolve o objeto com as informações que foram atualizadas
     });
    };
 
@@ -88,7 +102,7 @@ const usuarioGet =  (req, res = response ) => {
     
    //Função para validar se existe o e-mail com a mesma informação cadastrada anteriormente
 
-   
+   /*
     const existeEmail = await Usuario.findOne({ correo:correo  }); ///findOne verifica se o correo buscado existe no banco de dados
         if ( existeEmail ){
 
@@ -98,15 +112,13 @@ const usuarioGet =  (req, res = response ) => {
             });
         }
     
-
+        */
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync(); ///Metodo para definir a dificuldade de encriptrografação
     usuario.password = bcryptjs.hashSync( password, salt);/// Encriptografar em uma unica via
 
     // guardar en BD
-
-
 
 
    

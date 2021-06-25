@@ -1,4 +1,6 @@
-const validarCampos = () => {
+const { validationResult } = require('express-validator');
+
+const validarCampos = ( req, res, next ) => { //next é o terceiro argumento para seguir se não cair no erro 
 
   ///Recebe os erros reportados do arquivo de routes
       
@@ -8,7 +10,7 @@ const validarCampos = () => {
 
       }
   
-
+      next();
 
 }
 
