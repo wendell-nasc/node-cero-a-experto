@@ -24,11 +24,10 @@ const { usuarioGet,usuarioPut,usuarioPost,
 ///chamar a função  Router
 const router = Router();
 
+
 ////GET ////////////////////////////////////////////////
 ///Executa a referencia dos controllers
 router.get('/', usuarioGet);
-
-
 
 
 ////PUT ////////////////////////////////////////////////
@@ -37,6 +36,7 @@ router.get('/', usuarioGet);
 router.put('/:id', [  //Inicia o middleware para validar as informações
     check ('id', 'No es un ID válido').isMongoId(), /// Valida se o ID é um id valido do MONGODB
     check( 'id' ).custom( existeUsuarioPorId ), 
+    check('role').custom( esRoleValido ), //Reutilizada validação da função de ROLE
     validarCampos ////// Chama função do middleware para validar os campos dos parametros passados
 ],
              ///Fim Middleware
@@ -62,9 +62,26 @@ router.post('/',
     ],
     usuarioPost); ///Executa o controlador depois de percorrer as validacoes
 
+
+
+
+
 ////DELETE 
 ///Executa a referencia dos controllers
-router.delete('/', usuarioDelete);
+router.delete('/:id', [  //Inicia o middleware para validar as informações
+    check ('id', 'No es un ID válido').isMongoId(), /// Valida se o ID é um id valido do MONGODB
+    check( 'id' ).custom( existeUsuarioPorId ),    
+    validarCampos ////// Chama função do middleware para validar os campos dos parametros passados
+], 
+usuarioDelete);
+
+
+
+
+
+
+
+
 
 
 ////Patch 

@@ -7,9 +7,9 @@ const Usuario = require('../models/usuario');
 ////FUNCAO PARA VALIDAR O CAMPO ROLE DA TABELA
 const esRoleValido = async (role = '') => { //valida o campo da tabela role models
     
-    const existeRol = await Role.findOne({ role:role}); ///findOne verifica se a role buscada existe no banco de dados
+    const existeRol = await Role.findOne({ role }); ///findOne verifica se a role buscada existe no banco de dados
     if ( !existeRol ){
-        throw new Error(`El rol ${ role } no está registrado en la BD` ); ///Não exite entrar na condicao de erro
+        throw new Error(`El rol ${ role } no está registrado en la BD`); ///Não exite entrar na condicao de erro
     }
 }
 

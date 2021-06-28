@@ -20,23 +20,52 @@ const Usuario = require ('../models/usuario');
 
 ////GET 
 ///Define uma constant para o metodo usuarioGet... res=response é importado do express logo acima
-const usuarioGet =  (req, res = response ) => { 
+const usuarioGet =  async (req = request, res = response ) => { 
     ///Recebe todas informações enviadas nos paramatros
-    const query = req.query; //http://localhost:8084/api/usuarios?q=hola&nombre=wendell&apikey=123456
+    //const query = req.query; //http://localhost:8084/api/usuarios?q=hola&nombre=wendell&apikey=123456
    
    ///Desestruturada
    // const { q, nombre, apikey } = req.query;
     //Pode ser desestrutura e definido valor nulo para variavel qdo não é enviado nada ... importante !!!!
-    const { q='' , nombre='No name', apikey= '',page= 1, limit="10" } = req.query;
-     res.json({ 
-         msg: 'get API - controlador',
-         q,
-         nombre,
-         apikey,
-         page,
-         limit,
-         query
-     });
+   /// const { q='' , nombre='No name', apikey= '',page= 1, limit="10" } = req.query; // comentado para ficar como refencia para envio e recebimento de parametros
+
+
+   const { limite = 5, desde = 0 } = req.query; ///Desestrutura o limite enviado pelo frontal e define valor default se não é enviado
+    
+   /*
+   const usuarios = await Usuario.find( { estado : true} ) //Get e busca de todos os usuarios do banco
+    /// O parametro estado = true  só retorna os registros que não foram excluidos fisicamente do banco
+   .skip ( Number( desde )) /// A função skip é para informar desde qual posição de registro do bancos é para retornar
+   .limit( Number(limite) ); /// A função limit determina o limite registros retornados para o forntal
+        //Number transformar o limite de string para numero
+
+
+    const total =    await Usuario.countDocuments( { estado : true} ); /// O metodo countDocuments é usado para contar a qtde de registros
+    /// O parametro estado = true  só retorna os registros que não foram excluidos fisicamente do banco
+    /// Ele criou uma constante para armazenar o estado = true --> const query = { estado true }
+
+*/  
+
+/// O professor excluiu o trecho do codigo acima e substitui pelo debaixao por conta dos dois await... ele explicou se são usados separados o sistema fica aguardndo um retorno que é acumulatibo, ou seja, se um demora 5 s e o outro 10 o total de tempo de espera sera de 15
+
+
+    //const resp = await Promise.all ([ //// O Promise.all é usado para dispara mais de um wait para otimizar a consulta
+    const [ total, usuarios ]= await Promise.all ([ //Usuario a desestruturação para dar nome as posiçoes dos arrays
+    Usuario.countDocuments( { estado : true} ),
+    Usuario.find( { estado : true} )
+    .skip ( Number( desde )) 
+    .limit( Number(limite) )     
+
+
+]);
+    
+        res.json({ 
+            ///resp --> devido a desestruturação, usou total e usuarios
+
+            total,
+            usuarios
+           
+        });
     };
 
     ////PUT 
@@ -57,17 +86,19 @@ const usuarioGet =  (req, res = response ) => {
 
 
         }
-         /// Funcação findByIdAndUpdate busca pelo id e atualiza
+         /// Funcação findByIdAndUpdate do Mongoose busca pelo id e atualiza
          ///useFindAndModify utiliza essa funcao da base de dados
-        const usuario = await Usuario.findByIdAndUpdate( id, resto );
+        const usuario = await Usuario.findByIdAndUpdate( id, resto ); ///Atualiza e armazena as informações para retornar
 
 
         ///Recebe todas informações enviadas nos paramatros desestruturada
         ///const { id } = req.params;      
         
     res.json({ 
-        msg: 'put API - controlador',
-        usuario /// devolve o objeto com as informações que foram atualizadas
+        ///msg: 'put API - controlador', ///excluido
+        usuario /// Retorna as informaçoes atualizadas para o frontal, NO CURSO FOI COMENTADO E EXCLUIDO
+        //FICOU ASSIM
+        //res.json(usuario); ///enviando apenas o objeto sem os parametros msg e usuario
     });
    };
 
@@ -129,7 +160,7 @@ const usuarioGet =  (req, res = response ) => {
     ///const { nombre, edad } = req.body;
     
     res.json({ 
-        msg: 'post API - controlador',
+        //msg: 'post API - controlador',
         usuario /// Mostra a informação do usuario
     });
    };
@@ -138,10 +169,27 @@ const usuarioGet =  (req, res = response ) => {
 
    ////DELETE 
 ///Define uma constant para o metodo usuarioGet... res=response é importado do express logo acima
-const usuarioDelete =  (req, res = response ) => { 
+const usuarioDelete =  async (req, res = response ) => { 
     
+    const { id } = req.params;
+
+
+
+
+    //FISICAMENTE LO BORRAMOS
+    
+    //const usuario = await Usuario.findByIdAndDelete ( id ); /// Função findByIdAndDelete é usada para excluir o registro da base
+    const usuario = await Usuario.findByIdAndUpdate ( id, { estado: false}  ); /// Edita o registro para criar uma exclusão logica, diferente do metodo acima
+
+
+
     res.json({ 
-        msg: 'delete API - controlador'
+        //msg: 'delete API - controlador'
+    //id
+
+    usuario /// retona os dados do registro excluido da base mongoose
+
+
     });
    };
 
