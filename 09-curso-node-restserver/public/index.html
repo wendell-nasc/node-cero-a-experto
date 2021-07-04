@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- IMPORTA A FUNÇÃO DO GOOGLE SIGN IN https://developers.google.com/identity/sign-in/web/sign-in-->
+    <meta name="google-signin-client_id" content="985488692653-4no5i6s79qtq9vaapcj7hqj8v9a8v195.apps.googleusercontent.com">
+    <title>GOOGLE SIGN IN</title>
+</head>
+<body>
+
+    <h1>GOOGLE SIGN IN</h1>
+
+<hr>
+    <!-- Criar o botão GOOGLE SIGN INF-->   
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    
+    
+    <!-- Adicionar um botão de login do Google Função GOOGLE SIGN -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>    
+    
+    
+    
+    <!-- Adicionar um botão de logout do Google Função GOOGLE SIGN -->
+    <a href="#" onclick="signOut();">Sign out</a>
+
+    <!-- Obtenha informações de perfil - Função GOOGLE para pegar o perfil GOOGLE apos de caregar o botao-->   
+    <script>
+
+        function onSignIn(googleUser) {
+
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
+
+    </script>
+
+
+    <!-- Desconectar um usuário -->   
+
+    <script>
+               
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            console.log('User signed out.');
+            });
+        }     
+
+        </script>
+</body>
+</html>
