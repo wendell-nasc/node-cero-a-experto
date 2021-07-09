@@ -61,9 +61,7 @@ router.post ('/', (req, res ) => {
 router.post('/',[
     validarJWT,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('estado', 'El estado es obligatorio').not().isEmpty(),
-    check('usuario', 'El estado es obligatorio').not().isEmpty(),
-    check('usuario').custom( existeUsuarioPorId ),    
+  //  check('usuario').custom( existeUsuarioPorId ),    
     //check('usuario').custom( esRoleValido ), 
     //tieneRole('ADMIN_ROLE', 'VENTAR_ROLE','OTRO_ROLE'),      
     validarCampos

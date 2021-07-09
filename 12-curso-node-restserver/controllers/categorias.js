@@ -14,19 +14,38 @@ const {
 
 const categoriasPost = async(req, res = response) => {
     
-    const { nombre, estado, usuario } = req.body;
-    const categoria = new Categoria({ nombre, estado, usuario });
+    const nombre = req.body.nombre.toUpperCase(); ///colocar maiuscula
+    
+    
+    const cateoriaDB = await Categoria.findOne({ nombre });
+
+    if ( cateoriaDB) {
+        return res.status(400).json({
+
+        msg: `La categoria ${ cateoriaDB.nombre }, ya existe`
+        });
+
+    }
+
+    const data = {
+        nombre,
+        usuario: req.usuario._id ///Informação do usuario ID vem do routes categorias a partir da função validar-jwt que busca o id do usuario assossiado ao token
+
+    }
+    
+    const categoria = new Categoria( data );
 
   
+
     // Guardar en BD
     await categoria.save();
 
-    res.json({
+    res.status(201).json(
         categoria
-    });
+    );
 }
 
-
+//ObtenerCategoria - paginado - total - populate
 
 const categoriasGet = async(req = request, res = response) => {
 
@@ -36,10 +55,13 @@ const categoriasGet = async(req = request, res = response) => {
     const [ total, categorias ] = await Promise.all([
         Categoria.countDocuments(query),
         Categoria.find(query)
+            .populate('usuario', 'nombre')
             .skip( Number( desde ) )
             .limit(Number( limite ))
     ]);
 
+
+  
     res.json({
         total,
         categorias
