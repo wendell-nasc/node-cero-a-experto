@@ -12,14 +12,25 @@ const CategoriaSchema = Schema({
         required: true
     },
     usuario: {
-        type: Schema.Types.ObjectId, ///Entidade Usuario mongo
+        type: Schema.Types.ObjectId, ////Usado para vincular as entidades que psosuem chave estrangeira
         ref: 'Usuario',
         required: true
     }
     
     
 
+
+
+
+
 });
+
+CategoriaSchema.methods.toJSON = function() {
+    const { __v, estado,...data  } = this.toObject(); // Remove do objeto a versao e estado
+   
+    return data;
+    //return categoria;
+}
 
 
 module.exports = model( 'Categoria', CategoriaSchema );

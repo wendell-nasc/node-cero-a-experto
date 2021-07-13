@@ -2,72 +2,75 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { esRoleValido, emailExiste, existeUsuarioPorId, existeCategoriaPorId } = require('../helpers/db-validators');
+const { esRoleValido, emailExiste, existeUsuarioPorId, existeProdutoPorId, existeCategoriaPorId} = require('../helpers/db-validators');
+
+
+
 
 const { 
-    categoriasPost, 
-    categoriasGet,
-    categoriasPut,
-    categoriasDelete,
-    obtenerCategoria
-} = require('../controllers/categorias');
+    produtosPost, 
+    produtosGet,
+    produtosPut,
+    produtosDelete,
+    obtenerProdutos
+} = require('../controllers/produtos');
+
 
 
 const {
     validarCampos,
     validarJWT,
     esAdminRole,
-    tieneRole,
-    tieneCategoria    
+    tieneRole  
 } = require('../middlewares');
 
 
 const router = Router();
 
 /*
-//Obtener todas las categorias - publico
+//Obtener todas las produtoss - publico
 router.get ('/', (req, res ) => {
     res.json('get')
 })
 */
 
-//Obtener todas las categorias - publico
-router.get('/', categoriasGet );
+//Obtener todas las produtoss - publico
+router.get('/', produtosGet );
 
 
 
 
 /*
-//Obtener una categoria por id - publico
+//Obtener una produtos por id - publico
 router.get ('/:id', (req, res ) => {
     res.json('get id')
 })
 */
 
-//Obtener una categoria por id - publico
+//Obtener una produtos por id - publico
 router.get('/:id',[
     check('id', 'El id es obligatorio').not().isEmpty(),    
-    check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom ( existeCategoriaPorId ),
+    //check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom ( existeProdutoPorId ),
     validarCampos
-], obtenerCategoria );
+], obtenerProdutos );
 
 /*
-crear  categorias - privado - cualquier persona con token válido
+crear  produtos - privado - cualquier persona con token válido
 router.post ('/', (req, res ) => {
     res.json('post')
 })
 */
 
-//crear  categorias - privado - cualquier persona con token válido
+//crear  produtos - privado - cualquier persona con token válido
 router.post('/',[
     validarJWT,
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-  //  check('usuario').custom( existeUsuarioPorId ),    
-    //check('usuario').custom( esRoleValido ), 
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),   
+    check('categoria','Noa es un id de Mongo').isMongoId(),
+    check('categoria').custom( existeCategoriaPorId ),
     //tieneRole('ADMIN_ROLE', 'VENTAR_ROLE','OTRO_ROLE'),      
     validarCampos
-], categoriasPost );
+], produtosPost );
 
 
 
@@ -84,29 +87,29 @@ router.put('/:id',[
     validarJWT,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom( existeCategoriaPorId ),    
+    check('id').custom( existeProdutoPorId ),    
     validarCampos
-],categoriasPut );
+],produtosPut );
 
 
 
 /*
-//Borrar una categoria - Admin
+//Borrar una produtos - Admin
 router.delete ('/:id', (req, res ) => {
     res.json('delete')
 })
 */
 
-//Borrar una categoria - Admin
+//Borrar una produtos - Admin
 
 router.delete('/:id',[
     validarJWT,
     esAdminRole,
     //tieneRole('ADMIN_ROLE', 'VENTAR_ROLE','OTRO_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom( existeCategoriaPorId ),
+    check('id').custom( existeProdutoPorId ),
     validarCampos
-],categoriasDelete );
+],produtosDelete );
 
 
 

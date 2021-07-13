@@ -45,6 +45,25 @@ const categoriasPost = async(req, res = response) => {
     );
 }
 
+const obtenerCategoria = async(req, res = response) => {
+
+    
+        const { id } = req.params;
+    
+          
+            // Verificar si el email existe
+            const produto = await Categoria.findById( id )
+                                    .populate('usuario', 'nombre')
+                                    //.populate('categoria', 'nombre');
+                     
+    
+            res.json( produto );
+        
+        }
+    
+
+
+
 //ObtenerCategoria - paginado - total - populate
 
 const categoriasGet = async(req = request, res = response) => {
@@ -55,7 +74,7 @@ const categoriasGet = async(req = request, res = response) => {
     const [ total, categorias ] = await Promise.all([
         Categoria.countDocuments(query),
         Categoria.find(query)
-            .populate('usuario', 'nombre')
+            .populate('usuario', 'nombre') //Referencia para buscar os dados da chave estrangeira do usuario... id + nome
             .skip( Number( desde ) )
             .limit(Number( limite ))
     ]);
@@ -74,10 +93,14 @@ const categoriasGet = async(req = request, res = response) => {
 const categoriasPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, ...resto } = req.body;
+    const { estado, usuario, ... data } = req.body; ///Extraí os campos que não devem ser alterados no banco
 
-  
-    const categoria = await Categoria.findByIdAndUpdate( id, resto );
+    
+    data.nombre = data.nombre.toUpperCase(); // Coloca em maiusculo o nome da categoria
+    data.usuario = req.usuario._id; /// Estabelece o usuario que fez a ultima modificação que vem do token JWT
+    
+
+    const categoria = await Categoria.findByIdAndUpdate( id, data, { new: true }); /// A função e, bigode { new: true } serve para mandar sempre um documento atualizado
 
     res.json(categoria);
 }
@@ -87,65 +110,13 @@ const categoriasPut = async(req, res = response) => {
 const categoriasDelete = async(req, res = response) => {
 
     const { id } = req.params;
-    const categoria = await Categoria.findByIdAndUpdate( id, { estado: false } );
+    const categoria = await Categoria.findByIdAndUpdate( id, { estado: false }, { new: true }); /// A função e, bigode { new: true } serve para mandar sempre um documento atualizado
 
     
     res.json(categoria);
 }
 
-/*
 
-const categoriasGet = async(req = request, res = response) => {
-
-    const { limite = 5, desde = 0 } = req.query;
-    const query = { estado: true };
-
-    const [ total, usuarios ] = await Promise.all([
-        Usuario.countDocuments(query),
-        Usuario.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
-    ]);
-
-    res.json({
-        total,
-        usuarios
-    });
-}
-
-
-const usuariosPut = async(req, res = response) => {
-
-    const { id } = req.params;
-    const { _id, password, google, correo, ...resto } = req.body;
-
-    if ( password ) {
-        // Encriptar la contraseña
-        const salt = bcryptjs.genSaltSync();
-        resto.password = bcryptjs.hashSync( password, salt );
-    }
-
-    const usuario = await Usuario.findByIdAndUpdate( id, resto );
-
-    res.json(usuario);
-}
-
-const usuariosPatch = (req, res = response) => {
-    res.json({
-        msg: 'patch API - usuariosPatch'
-    });
-}
-
-const usuariosDelete = async(req, res = response) => {
-
-    const { id } = req.params;
-    const usuario = await Usuario.findByIdAndUpdate( id, { estado: false } );
-
-    
-    res.json(usuario);
-}
-
-*/
 
 
 module.exports = {
@@ -153,5 +124,6 @@ module.exports = {
     categoriasPost,
     categoriasPut,
     //usuariosPatch,
-    categoriasDelete
+    categoriasDelete,
+    obtenerCategoria
 }
