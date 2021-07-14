@@ -1,0 +1,124 @@
+const Role = require('../models/role');
+const { Usuario, Categoria, Produto } = require('../models');
+//const { collection } = require('../models/role');
+const { response } = require('express');
+
+
+const esRoleValido = async(rol = '') => {
+
+    const existeRol = await Role.findOne({ rol });
+    if ( !existeRol ) {
+        throw new Error(`El rol ${ rol } no está registrado en la BD`);
+    }
+}
+
+const emailExiste = async( correo = '' ) => {
+
+    // Verificar si el correo existe
+    const existeEmail = await Usuario.findOne({ correo });
+    if ( existeEmail ) {
+        throw new Error(`El correo: ${ correo }, ya está registrado`);
+    }
+}
+
+const existeUsuarioPorId = async( id ) => {
+
+    // Verificar si el correo existe
+    const existeUsuario = await Usuario.findById(id);
+    if ( !existeUsuario ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+
+/**
+ * Categorias
+ */
+const existeCategoriaPorId = async( id ) => {
+
+    // Verificar si el correo existe
+    const existeCategoria = await Categoria.findById(id);
+    if ( !existeCategoria ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+
+/**
+ * Productos
+ */
+const existeProductoPorId = async( id ) => {
+
+    // Verificar si el correo existe
+    const existeProducto = await Producto.findById(id);
+    if ( !existeProducto ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+
+
+/**
+ * Validar colecciones permitidas
+ */
+
+const coleccionesPermitidas = ( coleccion = '', colecciones = []) => { 
+
+const incluida = colecciones.includes ( coleccion ); 
+
+if ( !incluida ){
+    throw new Error( `La collecion ${ coleccion } no es permitida, ${ colecciones }`);
+
+}
+return true;
+
+
+}
+
+
+const actualizarImagen = async( req, res = response ) => {
+const { id, coleccion } = req.params;
+
+let modelo;
+
+
+switch ( coleccion ) {
+
+    case 'usuarios':
+        modelo = await Usuario.findById(id);
+        if ( !modelo ){
+            return res.status(400).json({ 
+                msg: `No existe un usuario con el id ${ id }`
+            })
+        }
+       
+        break;
+
+        case 'produtos':
+            modelo = await Produto.findById(id);
+            if ( !modelo ){
+                return res.status(400).json({ 
+                    msg: `No existe un produto con el id ${ id }`
+                })
+            }
+           
+            break;
+
+    default:
+        return res.status(500).json({ msg: 'Se me olvidó validar esto'})
+}
+
+
+
+
+res.json( {  id, coleccion  })
+}
+
+
+module.exports = {
+    esRoleValido,
+    emailExiste,
+    existeUsuarioPorId,
+    existeCategoriaPorId,
+    existeProductoPorId,
+    coleccionesPermitidas,
+    actualizarImagen
+}
+
