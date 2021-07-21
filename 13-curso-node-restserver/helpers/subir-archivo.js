@@ -40,7 +40,8 @@ const subirArchivo = ( files, extesionValidas = ['png', 'jpg', 'jpeg', 'gif'], c
           }
       
           //resolve(uploadPath ); Retorna o endereço da pasta onde foi salva o arquivo no endpoint
-          resolve( { nombreTemp, uploadPath });//Retorna  o nome do arquivo gerado
+          //resolve( { nombreTemp, uploadPath });//Retorna  o nome do arquivo gerado
+          resolve( nombreTemp );//Retorna  o nome do arquivo gerado
 
         });    
 
