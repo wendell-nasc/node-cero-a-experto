@@ -124,11 +124,11 @@ curso-node-webserver-express-1.0.0_hbs/.env
 15-curso-node-socket-colas/node_modules/**.*
 15-curso-node-socket-colas/.env
 
-16-curso-node-socket-chat/node_modules/
-16-curso-node-socket-chat/node_modules/*
-16-curso-node-socket-chat/node_modules/**
-16-curso-node-socket-chat/node_modules/**.*
-16-curso-node-socket-chat/.env
+/16-curso-node-socket-chat/node_modules/
+/16-curso-node-socket-chat/node_modules/*
+/16-curso-node-socket-chat/node_modules/**
+/16-curso-node-socket-chat/node_modules/**.*
+/16-curso-node-socket-chat/.env
 
 
 curso-node-socket-colas-main/node_modules/
@@ -139,8 +139,13 @@ curso-node-socket-colas-main/.env
 
 
 
-curso-node-socket-chat-main/node_modules/
+curso-node-socket-chat-main/node_modules
 curso-node-socket-chat-main/node_modules/*
 curso-node-socket-chat-main/node_modules/**
 curso-node-socket-chat-main/node_modules/**.*
 curso-node-socket-chat-main/.env
+
+
+node_modules/
+
+.env
